@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Altın Fiyatları</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f4;
+            margin: 0;
+            padding: 20px;
+        }
+        h1 {
+            text-align: center;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 20px 0;
+        }
+        table, th, td {
+            border: 1px solid #ddd;
+        }
+        th, td {
+            padding: 10px;
+            text-align: center;
+        }
+        th {
+            background-color: #f2f2f2;
+        }
+        .highlight {
+            background-color: yellow; /* Vurgulama rengi */
+            transition: background-color 0.5s ease;
+        }
+    </style>
+</head>
+<body>
+
+    <h1>Altın Fiyatları</h1>
+    <table>
+        <thead>
+            <tr>
+                <th>Varlık</th>
+                <th>Son Fiyat</th>
+                <th>Yüzde Değişim</th>
+                <th>Fiyat Değişimi</th>
+                <th>Alış</th>
+                <th>Satış</th>
+                <th>En Yüksek Fiyat</th>
+                <th>En Düşük Fiyat</th>
+                <th>Son Güncelleme</th>
+            </tr>
+        </thead>
+        <tbody id="price-data">
+        </tbody>
+    </table>
+
+    <script>
+        const ws = new WebSocket('wss://nc.ciner.com.tr/sub/dot');
+        const prices = {}; // Varlıkların tutulduğu nesne
+
+        // Hücreyi geçici olarak vurgulayan fonksiyon
+        function highlightCell(cell) {
+            cell.classList.add('highlight'); // Arka plan rengini değiştir
+            setTimeout(() => {
+                cell.classList.remove('highlight'); // 5 saniye sonra eski haline döndür
+            }, 5000); // 5000 ms = 5 saniye
+        }
+
+        // Satırdaki hücreleri güncelleyip vurgulama fonksiyonu
+        function updateRow(slug, data) {
+            const row = document.getElementById(slug);
+
+            const cells = row.getElementsByTagName('td');
+            const keys = ['SecuritySlug', 'LastPrice', 'PercentChange', 'PriceChange', 'Bid', 'Ask', 'HighPrice', 'LowPrice', 'LastUpdateTime'];
+            
+            keys.forEach((key, index) => {
+                const newValue = (key === 'LastUpdateTime') 
+                    ? new Date(data[key]).toLocaleString() 
+                    : data[key];
+                if (cells[index].innerText !== newValue) {
+                    cells[index].innerText = newValue;
+                    highlightCell(cells[index]); // Hücreyi vurgula
+                }
+            });
+        }
+
+        ws.onmessage = (event) => {
+            const data = JSON.parse(event.data);
+            const slug = data.SecuritySlug;
+
+            // Eğer tabloya varlık daha önce eklenmediyse yeni satır ekle
+            if (!prices[slug]) {
+                prices[slug] = data;
+                const row = `
+                    <tr id="${slug}">
+                        <td>${data.SecuritySlug}</td>
+                        <td>${data.LastPrice}</td>
+                        <td>${data.PercentChange}</td>
+                        <td>${data.PriceChange}</td>
+                        <td>${data.Bid}</td>
+                        <td>${data.Ask}</td>
+                        <td>${data.HighPrice}</td>
+                        <td>${data.LowPrice}</td>
+                        <td>${new Date(data.LastUpdateTime).toLocaleString()}</td>
+                    </tr>
+                `;
+                document.getElementById('price-data').insertAdjacentHTML('beforeend', row);
+            } else {
+                // Eğer varlık zaten varsa, verileri güncelle
+                prices[slug] = data;
+                updateRow(slug, data); // Satırı güncelle ve değişiklik varsa vurgula
+            }
+        };
+
+        ws.onerror = (error) => {
+            console.error('WebSocket Hatası:', error);
+        };
+    </script>
+
+</body>
+</html>

@@ -114,23 +114,7 @@
             }
         };
 
-        ws.onerror = (error) => {
-            console.error('WebSocket Hatası:', error);
-            const socket = new WebSocket('wss://85.104.59.102:15784/');
 
-socket.onerror = (error) => {
-    console.error('WebSocket Hatası:', error);
-};
-
-socket.onopen = () => {
-    console.log('WebSocket bağlantısı başarılı.');
-};
-
-socket.onclose = (event) => {
-    console.log('WebSocket bağlantısı kapatıldı:', event);
-};
-
-        };
     </script>
 
 </body>

@@ -1,22 +1,20 @@
 import { motion } from 'framer-motion'
 import { Zap, ArrowRight } from 'lucide-react'
+import { useTranslation } from '../i18n/LanguageContext'
 
 const container = {
   hidden: {},
-  show: {
-    transition: {
-      staggerChildren: 0.15,
-      delayChildren: 0.6,
-    },
-  },
+  show: { transition: { staggerChildren: 0.15, delayChildren: 0.6 } },
 }
-
 const item = {
   hidden: { opacity: 0, y: 20 },
   show: { opacity: 1, y: 0, transition: { duration: 0.8, ease: 'easeOut' } },
 }
 
 export default function HeroContent() {
+  const { t } = useTranslation()
+  const h = t.hero
+
   return (
     <motion.div
       variants={container}
@@ -31,22 +29,18 @@ export default function HeroContent() {
         style={{ fontSize: '0.75rem', letterSpacing: '0.2em' }}
       >
         <Zap size={14} fill="#7c3aed" />
-        <span>Canlı Piyasa Takibi</span>
+        <span>{h.label}</span>
       </motion.div>
 
-      {/* Headline — keyword-rich h1 for SEO */}
+      {/* H1 */}
       <motion.h1
         variants={item}
         className="font-bold text-white"
-        style={{
-          fontSize: 'clamp(2.75rem, 7vw, 5rem)',
-          lineHeight: 1.1,
-          letterSpacing: '-0.02em',
-        }}
+        style={{ fontSize: 'clamp(2.75rem, 7vw, 5rem)', lineHeight: 1.1, letterSpacing: '-0.02em' }}
       >
-        Canlı Altın
+        {h.line1}
         <br />
-        Fiyatları &amp;
+        {h.line2}
         <br />
         <span className="relative inline-block">
           <span
@@ -58,9 +52,8 @@ export default function HeroContent() {
               backgroundClip: 'text',
             }}
           >
-            Takibi
+            {h.gradient}
           </span>
-          {/* Glow behind "Takibi" */}
           <span
             aria-hidden
             className="absolute inset-0 z-0"
@@ -73,7 +66,7 @@ export default function HeroContent() {
               opacity: 0.5,
             }}
           >
-            Takibi
+            {h.gradient}
           </span>
         </span>
       </motion.h1>
@@ -83,14 +76,11 @@ export default function HeroContent() {
         variants={item}
         className="text-gray-400 text-lg md:text-xl font-light leading-relaxed max-w-md"
       >
-        Gram altın, Bitcoin, Ethereum ve 10+ kripto para fiyatını — USD/TRY, EUR/TRY döviz kurlarıyla birlikte anlık takip edin. Ücretsiz, reklamsız.
+        {h.description}
       </motion.p>
 
       {/* CTAs */}
-      <motion.div
-        variants={item}
-        className="flex flex-wrap gap-4 justify-center md:justify-start"
-      >
+      <motion.div variants={item} className="flex flex-wrap gap-4 justify-center md:justify-start">
         <a
           href="#fiyatlar"
           className="group flex items-center gap-2 px-6 py-3 rounded-full font-medium text-white transition-all duration-200 hover:-translate-y-0.5"
@@ -98,25 +88,18 @@ export default function HeroContent() {
             background: 'linear-gradient(135deg, #6d28d9, #3b82f6)',
             boxShadow: '0 0 20px rgba(99,102,241,0.4)',
           }}
-          onMouseEnter={e => {
-            ;(e.currentTarget as HTMLAnchorElement).style.boxShadow = '0 0 30px rgba(99,102,241,0.6)'
-          }}
-          onMouseLeave={e => {
-            ;(e.currentTarget as HTMLAnchorElement).style.boxShadow = '0 0 20px rgba(99,102,241,0.4)'
-          }}
+          onMouseEnter={e => { (e.currentTarget as HTMLAnchorElement).style.boxShadow = '0 0 30px rgba(99,102,241,0.6)' }}
+          onMouseLeave={e => { (e.currentTarget as HTMLAnchorElement).style.boxShadow = '0 0 20px rgba(99,102,241,0.4)' }}
         >
-          Fiyatları Gör
+          {h.cta1}
           <ArrowRight size={16} className="transition-transform duration-200 group-hover:translate-x-1" />
         </a>
         <a
           href="#fiyatlar"
           className="group flex items-center gap-2 px-6 py-3 rounded-full font-medium text-gray-200 hover:text-white hover:bg-white/5 transition-all duration-200 hover:-translate-y-0.5"
-          style={{
-            background: 'rgba(0,0,0,0.2)',
-            border: '1px solid rgba(255,255,255,0.1)',
-          }}
+          style={{ background: 'rgba(0,0,0,0.2)', border: '1px solid rgba(255,255,255,0.1)' }}
         >
-          Piyasayı Keşfet
+          {h.cta2}
           <ArrowRight size={16} className="transition-transform duration-200 group-hover:translate-x-1" />
         </a>
       </motion.div>

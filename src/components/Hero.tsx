@@ -1,24 +1,23 @@
 import { lazy, Suspense } from 'react'
 import { motion } from 'framer-motion'
 import HeroContent from './HeroContent'
+import { useTranslation } from '../i18n/LanguageContext'
 
-// Lazy-load the heavy Three.js scene — defers ~900 KB from initial parse
-// so text + CTA paint immediately (LCP improvement)
 const ThreeScene = lazy(() => import('./3d/ThreeScene'))
 
 export default function Hero() {
+  const { t } = useTranslation()
+
   return (
     <section
       className="relative w-full h-screen overflow-hidden bg-[#030308]"
       style={{ minHeight: 800 }}
-      aria-label="Hero bölümü"
+      aria-label={t.hero.label}
     >
-      {/* 3D canvas — loads after initial paint */}
       <Suspense fallback={<div className="absolute inset-0 bg-[#030308]" />}>
         <ThreeScene />
       </Suspense>
 
-      {/* Content overlay */}
       <div className="absolute inset-0 flex justify-center pointer-events-none">
         <div className="w-full max-w-7xl px-6 flex items-center">
           <div className="w-full md:w-[45%] pointer-events-auto">
@@ -37,11 +36,8 @@ export default function Hero() {
             transition={{ duration: 2, repeat: Infinity, ease: 'easeInOut' }}
           />
         </div>
-        <span
-          className="text-gray-500 uppercase"
-          style={{ fontSize: '0.65rem', letterSpacing: '0.2em' }}
-        >
-          Keşfetmek için kaydır
+        <span className="text-gray-500 uppercase" style={{ fontSize: '0.65rem', letterSpacing: '0.2em' }}>
+          {t.hero.scroll}
         </span>
       </div>
     </section>

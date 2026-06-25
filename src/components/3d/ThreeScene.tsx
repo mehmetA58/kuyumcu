@@ -1,6 +1,5 @@
 import { Suspense } from 'react'
 import { Canvas } from '@react-three/fiber'
-import { Environment } from '@react-three/drei'
 import ErrorBoundary from '../ErrorBoundary'
 import CryptoCoin from './CryptoCoin'
 import FloatingParticles from './FloatingParticles'
@@ -18,7 +17,10 @@ export default function ThreeScene() {
         }}
       />
 
-      <ErrorBoundary>
+      {/* Canvas is wrapped in ErrorBoundary; individual 3D components
+          have their own inner boundaries so one failure doesn't black out
+          the whole scene */}
+      <ErrorBoundary fallback={<div className="absolute inset-0 bg-[#030308]" />}>
         <Canvas
           camera={{ position: [0, 0, 10], fov: 45 }}
           gl={{ antialias: false, alpha: true, powerPreference: 'high-performance' }}
@@ -27,13 +29,16 @@ export default function ThreeScene() {
           <color attach="background" args={['#030308']} />
           <fog attach="fog" args={['#030308', 8, 30]} />
 
-          <ambientLight intensity={0.2} />
-          <pointLight position={[10, 10, 10]} intensity={1.5} color="#7c3aed" />
-          <pointLight position={[-10, -10, -10]} intensity={1} color="#3b82f6" />
-          <directionalLight position={[0, 5, 5]} intensity={1.5} color="#ffffff" />
+          {/* Manual lighting — no external HDR fetch needed */}
+          <ambientLight intensity={0.3} />
+          <pointLight position={[10, 10, 10]} intensity={2} color="#7c3aed" />
+          <pointLight position={[-10, -10, -10]} intensity={1.2} color="#3b82f6" />
+          <pointLight position={[0, 8, 4]} intensity={1.8} color="#ffffff" />
+          <pointLight position={[5, -5, 8]} intensity={0.8} color="#b8860b" />
 
+          {/* CryptoCoin's texture is lazy — if CDN is unreachable the gold
+              edge still shows (CoinFacesErrorBoundary inside the component) */}
           <Suspense fallback={null}>
-            <Environment preset="city" />
             <CryptoCoin />
           </Suspense>
 

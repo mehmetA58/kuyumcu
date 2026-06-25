@@ -31,10 +31,10 @@ export default function HeroContent() {
         style={{ fontSize: '0.75rem', letterSpacing: '0.2em' }}
       >
         <Zap size={14} fill="#7c3aed" />
-        Altının Geleceği
+        <span>Canlı Piyasa Takibi</span>
       </motion.div>
 
-      {/* Headline */}
+      {/* Headline — keyword-rich h1 for SEO */}
       <motion.h1
         variants={item}
         className="font-bold text-white"
@@ -46,7 +46,7 @@ export default function HeroContent() {
       >
         Canlı Altın
         <br />
-        Piyasası
+        Fiyatları &amp;
         <br />
         <span className="relative inline-block">
           <span
@@ -83,7 +83,7 @@ export default function HeroContent() {
         variants={item}
         className="text-gray-400 text-lg md:text-xl font-light leading-relaxed max-w-md"
       >
-        Kuyumcu, gerçek zamanlı altın ve kıymetli maden fiyatlarını anlık olarak takip etmenizi sağlar. Hız, güvenlik ve şeffaflık bir arada.
+        Gram altın, Bitcoin, Ethereum ve 10+ kripto para fiyatını — USD/TRY, EUR/TRY döviz kurlarıyla birlikte anlık takip edin. Ücretsiz, reklamsız.
       </motion.p>
 
       {/* CTAs */}
